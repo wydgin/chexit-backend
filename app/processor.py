@@ -30,7 +30,7 @@ effnet_folds = []
 for i in range(1, 6):
     # Use the model builder from actual script to ensure layers match perfectly
     m = build_efficientnet_model() 
-    m.load_weights(f'app/models/fold_{i}.weights.h5')
+    m.load_weights(f'app/models/efb2_fold_{i}.weights.h5')
     effnet_folds.append(m)
 
 def run_tb_ensemble(image_bytes):
