@@ -21,7 +21,7 @@ def load_unet():
         "iou_coef": iou_coef,
     }
     # Using the 'best' file identified
-    return tf.keras.models.load_model('app/models/unet_lung_seg_best.h5', custom_objects=custom_objects)
+    return tf.keras.models.load_model('app/models/unet_lung_seg_best.h5', custom_objects=custom_objects, compile=False)
 
 # Load models once when the server starts to save time
 unet_model = load_unet()
