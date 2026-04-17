@@ -1,32 +1,31 @@
 from fastapi import FastAPI, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from .processor import run_tb_ensemble
-import io
+import cv2
+import base64
 
 app = FastAPI()
 
-# IMPORTANT: Allow your Vercel frontend to talk to this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://your-frontend.vercel.app"], 
+    allow_origins=["https://chexit.vercel.app"], # For MVP, allow all; restrict to your Vercel URL later
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-@app.get("/")
-def home():
-    return {"status": "Backend is running"}
-
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
-    # Read file
     img_bytes = await file.read()
     
-    # Run the "Plug-and-Play" function
+    # Run the Averaging Ensemble
     prob, heatmap = run_tb_ensemble(img_bytes)
     
-    # For now, just return the probability
+    # Encode heatmap to Base64
+    _, buffer = cv2.imencode('.jpg', (heatmap * 255).astype('uint8'))
+    heatmap_base64 = base64.b64encode(buffer).decode('utf-8')
+
     return {
-        "probability": prob,
-        "label": "Positive" if prob > 0.5 else "Negative"
+        "probability": round(prob, 4),
+        "label": "Tuberculosis" if prob > 0.5 else "Normal",
+        "heatmap": f"data:image/jpeg;base64,{heatmap_base64}"
     }

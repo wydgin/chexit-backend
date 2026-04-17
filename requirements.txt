@@ -4,4 +4,4 @@ python-multipart
 numpy
 opencv-python-headless
 pillow
-tensorflow
+tensorflow==2.15.0
