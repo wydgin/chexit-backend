@@ -1,0 +1,6 @@
+.git
+__pycache__
+.env
+training_history.json
+final_results.json
+all_predictions.csv

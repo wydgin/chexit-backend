@@ -5,6 +5,8 @@ import cv2
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+import matplotlib
+matplotlib.use('Agg') # This tells Matplotlib to run without a GUI
 import matplotlib.pyplot as plt
 from matplotlib import cm
 from pathlib import Path
