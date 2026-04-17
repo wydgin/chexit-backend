@@ -1,5 +1,4 @@
 import os
-os.environ["TF_USE_LEGACY_KERAS"] = "1"
 
 import cv2
 import numpy as np
@@ -15,7 +14,7 @@ from tqdm import tqdm
 # ---------------------------------------------------------------------------
 # Configuration
 # ---------------------------------------------------------------------------
-BASE_DIR = Path("/Users/gingalfo/199")
+BASE_DIR = Path("/Users/gingalfo/199/")
 TRAINING_DIR = BASE_DIR / "Training"
 MONTGOMERY_CXR_DIR = TRAINING_DIR / "montgomery_cxr"
 SHENZHEN_CXR_DIR = TRAINING_DIR / "shenzhen_cxr"
@@ -26,13 +25,13 @@ WEIGHTS_DIR = OUTPUT_DIR / "weights"
 VISUALIZATION_DIR = OUTPUT_DIR / "scorecam_visualizations"
 
 IMG_SIZE = 260
-TEST_MODE_LIMIT = 2
-TEST_ONLY_TB_POSITIVE = True
+TEST_MODE_LIMIT = None
+TEST_ONLY_TB_POSITIVE = False
 
 # ---------------------------------------------------------------------------
 # Model Builder (exactly as in training)
 # ---------------------------------------------------------------------------
-def build_efficientnet_model() -> tf.keras.Model:
+def build_efficientnet_model():
     data_augmentation = tf.keras.Sequential([
         tf.keras.layers.RandomFlip("horizontal"),
     ])
@@ -136,7 +135,7 @@ class ScoreCAM:
             outputs=[self.target_layer.output, self.base_model.output]
         )
     
-    def __call__(self, score_fn, x, batch_size=32, max_channels=256):
+    def __call__(self, score_fn, x, batch_size=16, max_channels=256):
         # 1. Get activations
         activations, _ = self.activation_model(x, training=False)
         
@@ -266,7 +265,7 @@ def main():
                 return output[:, 0] if p_lab == 1 else -output[:, 0]
 
             # 3. Generate Heatmap (THE FAST WAY)
-            heatmap = scorecam(score_fn, x_img, batch_size=32, max_channels=256)
+            heatmap = scorecam(score_fn, x_img, batch_size=16, max_channels=256)
             
             # 4. Apply colormap and blend
             heat_rgb = (cm.jet(heatmap)[..., :3] * 255).astype(np.float32)
