@@ -1,7 +1,9 @@
+tensorflow==2.15.0
+opencv-python-headless
+pandas
+matplotlib
+tqdm
+pillow
 fastapi
 uvicorn[standard]
 python-multipart
-numpy
-opencv-python-headless
-pillow
-tensorflow==2.15.0
