@@ -1,4 +1,5 @@
 tensorflow==2.15.0
+tf_keras==2.15.0
 opencv-python-headless
 pandas
 matplotlib
