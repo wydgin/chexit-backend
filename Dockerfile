@@ -1,9 +1,10 @@
 FROM python:3.9-slim
 
-# Install system dependencies for OpenCV
-RUN apt-get update && apt-get install -y \
+# Install system dependencies with extra reliability flags
+RUN apt-get update --fix-missing && apt-get install -y \
     libgl1-mesa-glx \
     libglib2.0-0 \
+    && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -13,5 +14,4 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-# Render uses port 10000 by default
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "10000"]
