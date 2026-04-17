@@ -8,7 +8,7 @@ app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://chexit.vercel.app"], # For MVP, allow all; restrict to your Vercel URL later
+    allow_origins=["https://chexit.vercel.app"],
     allow_methods=["*"],
     allow_headers=["*"],
 )

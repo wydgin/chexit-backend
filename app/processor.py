@@ -1,5 +1,5 @@
 import os
-# Important: Your scorecam script needs this set before TF loads
+#scorecam script needs this set before TF loads
 os.environ["TF_USE_LEGACY_KERAS"] = "1"
 
 import tensorflow as tf
@@ -8,9 +8,9 @@ import cv2
 import io
 from PIL import Image
 
-# Absolute imports from your app package
+# Absolute imports from app package
 from app.unet_segmentation import dice_coef, dice_coef_loss, iou_coef
-from app.generate_scorecam import build_efficientnet_model # Use your existing builder
+from app.generate_scorecam import build_efficientnet_model # Use existing builder
 
 # Constants
 IMG_SIZE_UNET = 256  
@@ -22,7 +22,7 @@ def load_unet():
         "dice_coef_loss": dice_coef_loss,
         "iou_coef": iou_coef,
     }
-    # Using the 'best' file we identified
+    # Using the 'best' file identified
     return tf.keras.models.load_model('app/models/unet_lung_seg_best.h5', custom_objects=custom_objects)
 
 # Load models once when the server starts to save time
@@ -30,7 +30,7 @@ unet_model = load_unet()
 
 effnet_folds = []
 for i in range(1, 6):
-    # Use the model builder from your actual script to ensure layers match perfectly
+    # Use the model builder from actual script to ensure layers match perfectly
     m = build_efficientnet_model() 
     m.load_weights(f'app/models/fold_{i}.weights.h5')
     effnet_folds.append(m)
@@ -66,9 +66,6 @@ def run_tb_ensemble(image_bytes):
     avg_prob = sum(probs) / len(probs)
 
     # --- STEP 3: SCORE-CAM ---
-    # Placeholder: You can now call your actual Score-CAM function here
-    # from app.generate_scorecam import your_function_name
-    # heatmap = your_function_name(effnet_folds[3], eff_input_final)
     heatmap_dummy = np.zeros((IMG_SIZE_EFFNET, IMG_SIZE_EFFNET, 3)) 
 
     return avg_prob, heatmap_dummy
