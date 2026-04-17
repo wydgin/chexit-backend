@@ -1,6 +1,13 @@
-.git
-__pycache__
+# Technical Junk
+__pycache__/
+*.pyc
+.git/
 .env
+venv/
+.ipynb_checkpoints/
+
+# Training Data/Logs (Save space & build time)
 training_history.json
 final_results.json
 all_predictions.csv
+*.ipynb
